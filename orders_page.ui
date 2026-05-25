@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>OrdersPage</class>
+ <widget class="QMainWindow" name="OrdersPage">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>861</width>
-    <height>488</height>
+    <width>800</width>
+    <height>600</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout_4">
       <item>
-       <widget class="QPushButton" name="orders_btn">
+       <widget class="QPushButton" name="back_to_main_btn">
         <property name="text">
-         <string>Заказы</string>
+         <string>Назад</string>
         </property>
        </widget>
       </item>
@@ -38,14 +38,9 @@
        </spacer>
       </item>
       <item>
-       <widget class="QLabel" name="fioUserLabel">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
+       <widget class="QLabel" name="fioUserLabel_2">
         <property name="text">
-         <string>Фамилия Имя Отчество</string>
+         <string>ФИО</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -54,45 +49,8 @@
       </item>
      </layout>
     </item>
-    <item>
-     <layout class="QHBoxLayout" name="searchLayout_2" stretch="0,0,2">
-      <item>
-       <widget class="QLineEdit" name="searchInput">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="placeholderText">
-         <string>Поиск</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="supplierLabel">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Поставщик:</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QComboBox" name="suppliersCombo">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </item>
-    <item>
-     <widget class="QScrollArea" name="scrollArea">
+    <item row="1" column="0">
+     <widget class="QScrollArea" name="scrollArea_orders">
       <property name="widgetResizable">
        <bool>true</bool>
       </property>
@@ -101,26 +59,21 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>841</width>
-         <height>325</height>
+         <width>780</width>
+         <height>481</height>
         </rect>
        </property>
       </widget>
      </widget>
     </item>
-    <item>
+    <item row="2" column="0">
      <layout class="QVBoxLayout" name="verticalLayout_3">
       <item>
-       <layout class="QHBoxLayout" name="adminBtns_2" stretch="2,1,2,1,2">
+       <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QPushButton" name="editProductBtn">
-          <property name="font">
-           <font>
-            <pointsize>14</pointsize>
-           </font>
-          </property>
+         <widget class="QPushButton" name="edit_order_btn">
           <property name="text">
-           <string>Редактировать товар</string>
+           <string>Редактировать заказ</string>
           </property>
          </widget>
         </item>
@@ -138,14 +91,9 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="addProductBtn">
-          <property name="font">
-           <font>
-            <pointsize>14</pointsize>
-           </font>
-          </property>
+         <widget class="QPushButton" name="add_order_btn">
           <property name="text">
-           <string>+ Товар</string>
+           <string>+ Заказ</string>
           </property>
          </widget>
         </item>
@@ -163,26 +111,16 @@
          </spacer>
         </item>
         <item>
-         <widget class="QPushButton" name="deleteProductBtn">
-          <property name="font">
-           <font>
-            <pointsize>14</pointsize>
-           </font>
-          </property>
+         <widget class="QPushButton" name="del_order_btn">
           <property name="text">
-           <string>Удалить товар</string>
+           <string>Удалить заказ</string>
           </property>
          </widget>
         </item>
        </layout>
       </item>
       <item>
-       <widget class="QPushButton" name="logoutBtn">
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
+       <widget class="QPushButton" name="pushButton_4">
         <property name="text">
          <string>Выйти</string>
         </property>

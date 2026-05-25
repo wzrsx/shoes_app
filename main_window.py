@@ -23,11 +23,22 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(882, 690)
+        MainWindow.resize(861, 488)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.verticalLayout_2 = QVBoxLayout(self.centralwidget)
-        self.verticalLayout_2.setObjectName(u"verticalLayout_2")
+        self.verticalLayout = QVBoxLayout(self.centralwidget)
+        self.verticalLayout.setObjectName(u"verticalLayout")
+        self.horizontalLayout_3 = QHBoxLayout()
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.orders_btn = QPushButton(self.centralwidget)
+        self.orders_btn.setObjectName(u"orders_btn")
+
+        self.horizontalLayout_3.addWidget(self.orders_btn)
+
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_3.addItem(self.horizontalSpacer_6)
+
         self.fioUserLabel = QLabel(self.centralwidget)
         self.fioUserLabel.setObjectName(u"fioUserLabel")
         font = QFont()
@@ -35,81 +46,82 @@ class Ui_MainWindow(object):
         self.fioUserLabel.setFont(font)
         self.fioUserLabel.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
 
-        self.verticalLayout_2.addWidget(self.fioUserLabel)
+        self.horizontalLayout_3.addWidget(self.fioUserLabel)
 
-        self.searchLayout = QHBoxLayout()
-        self.searchLayout.setObjectName(u"searchLayout")
+
+        self.verticalLayout.addLayout(self.horizontalLayout_3)
+
+        self.searchLayout_2 = QHBoxLayout()
+        self.searchLayout_2.setObjectName(u"searchLayout_2")
         self.searchInput = QLineEdit(self.centralwidget)
         self.searchInput.setObjectName(u"searchInput")
         self.searchInput.setFont(font)
 
-        self.searchLayout.addWidget(self.searchInput)
+        self.searchLayout_2.addWidget(self.searchInput)
 
         self.supplierLabel = QLabel(self.centralwidget)
         self.supplierLabel.setObjectName(u"supplierLabel")
         self.supplierLabel.setFont(font)
 
-        self.searchLayout.addWidget(self.supplierLabel)
+        self.searchLayout_2.addWidget(self.supplierLabel)
 
         self.suppliersCombo = QComboBox(self.centralwidget)
         self.suppliersCombo.setObjectName(u"suppliersCombo")
         self.suppliersCombo.setFont(font)
 
-        self.searchLayout.addWidget(self.suppliersCombo)
+        self.searchLayout_2.addWidget(self.suppliersCombo)
 
-        self.searchLayout.setStretch(0, 4)
-        self.searchLayout.setStretch(1, 1)
-        self.searchLayout.setStretch(2, 2)
+        self.searchLayout_2.setStretch(2, 2)
 
-        self.verticalLayout_2.addLayout(self.searchLayout)
+        self.verticalLayout.addLayout(self.searchLayout_2)
 
         self.scrollArea = QScrollArea(self.centralwidget)
         self.scrollArea.setObjectName(u"scrollArea")
         self.scrollArea.setWidgetResizable(True)
-        self.scrollAreaWidgetContents = QWidget()
-        self.scrollAreaWidgetContents.setObjectName(u"scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 862, 532))
-        self.scrollArea.setWidget(self.scrollAreaWidgetContents)
+        self.scrollAreaWidgetContents_2 = QWidget()
+        self.scrollAreaWidgetContents_2.setObjectName(u"scrollAreaWidgetContents_2")
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 841, 325))
+        self.scrollArea.setWidget(self.scrollAreaWidgetContents_2)
 
-        self.verticalLayout_2.addWidget(self.scrollArea)
+        self.verticalLayout.addWidget(self.scrollArea)
 
-        self.verticalLayout = QVBoxLayout()
-        self.verticalLayout.setObjectName(u"verticalLayout")
-        self.adminBtns = QHBoxLayout()
-        self.adminBtns.setObjectName(u"adminBtns")
+        self.verticalLayout_3 = QVBoxLayout()
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.adminBtns_2 = QHBoxLayout()
+        self.adminBtns_2.setObjectName(u"adminBtns_2")
         self.editProductBtn = QPushButton(self.centralwidget)
         self.editProductBtn.setObjectName(u"editProductBtn")
         self.editProductBtn.setFont(font)
 
-        self.adminBtns.addWidget(self.editProductBtn)
+        self.adminBtns_2.addWidget(self.editProductBtn)
 
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.adminBtns.addItem(self.horizontalSpacer_2)
+        self.adminBtns_2.addItem(self.horizontalSpacer_3)
 
         self.addProductBtn = QPushButton(self.centralwidget)
         self.addProductBtn.setObjectName(u"addProductBtn")
         self.addProductBtn.setFont(font)
 
-        self.adminBtns.addWidget(self.addProductBtn)
+        self.adminBtns_2.addWidget(self.addProductBtn)
 
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.adminBtns.addItem(self.horizontalSpacer)
+        self.adminBtns_2.addItem(self.horizontalSpacer_4)
 
         self.deleteProductBtn = QPushButton(self.centralwidget)
         self.deleteProductBtn.setObjectName(u"deleteProductBtn")
         self.deleteProductBtn.setFont(font)
 
-        self.adminBtns.addWidget(self.deleteProductBtn)
+        self.adminBtns_2.addWidget(self.deleteProductBtn)
 
-        self.adminBtns.setStretch(0, 2)
-        self.adminBtns.setStretch(1, 1)
-        self.adminBtns.setStretch(2, 2)
-        self.adminBtns.setStretch(3, 1)
-        self.adminBtns.setStretch(4, 2)
+        self.adminBtns_2.setStretch(0, 2)
+        self.adminBtns_2.setStretch(1, 1)
+        self.adminBtns_2.setStretch(2, 2)
+        self.adminBtns_2.setStretch(3, 1)
+        self.adminBtns_2.setStretch(4, 2)
 
-        self.verticalLayout.addLayout(self.adminBtns)
+        self.verticalLayout_3.addLayout(self.adminBtns_2)
 
         self.logoutBtn = QPushButton(self.centralwidget)
         self.logoutBtn.setObjectName(u"logoutBtn")
@@ -117,10 +129,10 @@ class Ui_MainWindow(object):
         font1.setPointSize(12)
         self.logoutBtn.setFont(font1)
 
-        self.verticalLayout.addWidget(self.logoutBtn)
+        self.verticalLayout_3.addWidget(self.logoutBtn)
 
 
-        self.verticalLayout_2.addLayout(self.verticalLayout)
+        self.verticalLayout.addLayout(self.verticalLayout_3)
 
         MainWindow.setCentralWidget(self.centralwidget)
 
@@ -131,6 +143,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.orders_btn.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u043a\u0430\u0437\u044b", None))
         self.fioUserLabel.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u043c\u0438\u043b\u0438\u044f \u0418\u043c\u044f \u041e\u0442\u0447\u0435\u0441\u0442\u0432\u043e", None))
         self.searchInput.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a", None))
         self.supplierLabel.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0441\u0442\u0430\u0432\u0449\u0438\u043a:", None))

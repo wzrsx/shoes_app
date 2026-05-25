@@ -16,7 +16,10 @@ from PySide6.QtGui import QColor, QBrush, QPixmap
 from auth import Ui_LoginWindow
 from main_window import Ui_MainWindow
 from form import Ui_ProductForm
+from orders_page import Ui_OrdersPage
 from product_card import Ui_ProductCard
+from order_card import Ui_OrderCard
+from form_order import Ui_OrderForm
 
 from config import (
     COLOR_DISCOUNT, COLOR_OUT_OF_STOCK, COLOR_OLD_PRICE,
@@ -188,7 +191,7 @@ class MainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         self.role = role
-
+        
         # Отслеживание выбора
         self.selected_card = None
         self.selected_product = None
@@ -198,6 +201,7 @@ class MainWindow(QMainWindow):
         self.load_products()
 
         self.ui.logoutBtn.clicked.connect(self.logout)
+        self.ui.orders_btn.clicked.connect(self.open_orders)
 
     def setup_role_interface(self):
         self.ui.searchInput.setVisible(False)
@@ -372,6 +376,10 @@ class MainWindow(QMainWindow):
             self.clear_product_cards()
             self.load_products()
             return
+    
+    def open_orders(self):
+        self.orders_win = OrdersWindow(self.role)
+        self.orders_win.show()
 
     def logout(self):
         self.role = None
@@ -390,7 +398,6 @@ class ProductForm(QDialog):
             self.set_product_data()
         self.set_combo_boxes()
         self.setupBtns()
-        self.ui.add_photo_btn.clicked.connect(self.add_photo)
 
     def set_product_data(self):
         self.ui.articleProduct.setText(self.product.article)
@@ -418,6 +425,7 @@ class ProductForm(QDialog):
     def setupBtns(self):
         self.ui.cancelBtn.clicked.connect(self.reject)
         self.ui.saveBtn.clicked.connect(self.save_product)
+        self.ui.add_photo_btn.clicked.connect(self.add_photo)
 
     def add_photo(self):
         file_path, _ = QFileDialog.getOpenFileName(
@@ -486,9 +494,172 @@ class ProductForm(QDialog):
             show_msg(self, "Ошибка", "Скидка должна быть от 0 до 100")
             return False
         return True
+
     
+class OrdersWindow(QMainWindow):
+    def __init__(self, role: str):
+        super().__init__()
+        self.session = get_session()
+        self.role = role
+        self.ui = Ui_OrdersPage()
+        self.ui.setupUi(self)
 
+        self.selected_card = None
+        self.selected_order = None
+        
+        self.setup_role_interface()
+        self.setup_scroll_container() 
+        self.load_orders()
 
+    def setup_role_interface(self):
+        self.ui.edit_order_btn.setVisible(False)
+        self.ui.add_order_btn.setVisible(False)
+        self.ui.edit_order_btn.setVisible(False)
+
+        if self.role == ROLE_ADMIN:
+            self.ui.edit_order_btn.setVisible(True)
+            self.ui.add_order_btn.setVisible(True)
+            self.ui.edit_order_btn.setVisible(True)
+            
+            self.ui.edit_order_btn.clicked.connect(self.edit_order)
+            self.ui.add_order_btn.clicked.connect(self.add_order)
+            self.ui.edit_order_btn.clicked.connect(self.edit_order)
+
+    def setup_scroll_container(self):
+        self.cards_container = self.ui.scrollArea_orders.widget()
+        self.cards_layout = QVBoxLayout(self.cards_container)
+
+    def load_orders(self):
+        orders = self.session.query(Order).all()
+        for o in orders:
+            self.add_single_card(o)
+
+    def clear_order_cards(self):
+        self.selected_card = None
+        self.selected_order = None
+        while self.cards_layout.count():
+            item = self.cards_layout.takeAt(0)
+            if item.widget():
+                item.widget().deleteLater()
+
+    def add_single_card(self, order: Order):
+        card_widget = QWidget()
+        
+        card_widget.order_data = order
+
+        card_ui = Ui_OrderCard()
+        card_ui.setupUi(card_widget)
+
+        card_ui.article_order.setText(f"Артикул заказа: {order.id}")
+        card_ui.status_order.setText(f"Статус: {order.status}")
+        #НУЖЕН JOIN
+        card_ui.address_pvz.setText(f"Адрес: {str(order.address_id)}")
+        card_ui.date_order.setText(f"Дата заказа: {str(order.order_date)}")
+        card_ui.date_delivery.setText(f"Дата доставки: {str(order.delivery_date)}")
+
+        self.cards_layout.addWidget(card_widget)
+
+        def on_click(event):
+            if event.button() == Qt.LeftButton:
+                self.select_card(card_widget)
+                event.accept()
+        
+        card_widget.mousePressEvent = on_click
+
+    def logout(self):
+        self.role = None
+        self.session.close() 
+        self.close()
+        self.logged_out.emit()
+
+    def select_card(self, card_widget):
+        if self.selected_card:
+            self.selected_card.setStyleSheet("background-color: none")
+        self.selected_card = card_widget
+        self.selected_order = getattr(card_widget, 'order_data')
+        self.selected_card.setStyleSheet(f"#ProductCard {{background-color: {COLOR_SELECTED_CARD}}}")
+
+    def edit_order(self):
+        if self.selected_card == None:
+            show_msg(self, "Внимание", "Для редактирования заказа выберите его в списке")
+
+        form_order = OrderForm(self.selected_order)
+        if form_order.exec() == QDialog.Accepted:
+            self.clear_order_cards()
+            self.load_orders()
+            return
+        
+    def add_order(self):
+        form_order = OrderForm(None)
+        if form_order.exec() == QDialog.Accepted:
+            self.clear_order_cards()
+            self.load_orders()
+            return
+
+    def del_order(self):
+        if self.selected_card == None:
+            show_msg(self, "Внимание", "Для удаления заказа выберите его в списке")
+
+        reply = QMessageBox.question(
+            self,
+            "Подтверждение удаления",
+            "Вы действительно хотите удалить заказ",
+            QMessageBox.StandartButton.Yes | QMessageBox.StandartButton.No 
+        )
+
+        if reply == QMessageBox.StandardButton.Yes:
+            try:
+                self.session.delete(self.selected_order)
+                self.session.commit()
+
+                self.select_card = None
+                self.selected_order = None
+
+                self.apply_filters()
+
+                show_msg(self, "Успех", "Заказ успешно удален")
+            except Exception as e:
+                self.session.rollback()
+                show_msg(self, f"Ошибка: Произошла ошибка {e}", QMessageBox.Critical)
+
+class OrderForm(QDialog):
+    def __init__(self, order: Order):
+        super().__init__()
+        self.session = get_session()
+        self.order = order if order is not None else Order()
+        self.ui = Ui_OrderForm()
+        self.ui.setupUi(self)
+        if order != None:
+            self.set_order_data()
+            
+        self.setup_btns()
+
+    def set_order_data(self):
+        self.ui.article_order.setText(self.order.id)
+        self.ui.status_combo.addItems("Оформлен", "В доставке", "Доставлен", "Получен")
+        self.ui.address_pvz.setText(self.order.address_id)
+        self.ui.date_order.setText(self.order.order_date)
+        self.ui.date_delivery.setText(self.order.delivery_date)
+
+    def setup_btns(self):
+        self.ui.cancelBtn.clicked.connect(self.reject)
+        self.ui.saveBtn.clicked.connect(self.save_order)
+
+    def save_order(self):
+        try:
+            ##self.order.id = self.ui.article_order
+            self.order.order_date = self.ui.date_order.text()
+            self.order.delivery_date = self.ui.date_delivery.text()
+            self.order.address_id = self.ui.address_pvz.text()
+
+            self.session.add(self.order)
+            self.session.commit()
+            self.accept
+        except Exception as e:
+            self.session.rollback()
+            show_msg(self, f"Ошибка: Произошла ошибка {e}", QMessageBox.Critical)
+            self.reject()
+    
 def main():
     init_db()
     test_db_content()
