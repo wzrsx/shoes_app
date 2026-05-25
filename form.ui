@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>859</width>
-    <height>531</height>
+    <height>585</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -113,6 +113,13 @@
    </item>
    <item>
     <widget class="QLineEdit" name="discountProduct"/>
+   </item>
+   <item>
+    <widget class="QPushButton" name="add_photo_btn">
+     <property name="text">
+      <string>Редактировать фото</string>
+     </property>
+    </widget>
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">

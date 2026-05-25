@@ -246,6 +246,8 @@ class MainWindow(QMainWindow):
             self.add_single_card(product)
     
     def clear_product_cards(self):
+        self.selected_card = None
+        self.selected_product = None
         while self.cards_layout.count():
             item = self.cards_layout.takeAt(0)
             if item.widget():
@@ -263,6 +265,14 @@ class MainWindow(QMainWindow):
 
         card_ui = Ui_ProductCard()
         card_ui.setupUi(card_widget)
+
+        if product.image_url:
+            pixmap = QPixmap(product.image_url)
+        else:
+            pixmap = QPixmap(PLACEHOLDER_IMAGE)
+
+        pixmap = pixmap.scaled(300, 200, Qt.KeepAspectRatio, Qt.SmoothTransformation);
+        card_ui.label_photo.setPixmap(pixmap)
 
         card_ui.label_title.setText(f"{product.category} | {product.title}")
         card_ui.label_desc.setText(f"Описание: {product.description or 'Нет описания'}")
@@ -301,7 +311,6 @@ class MainWindow(QMainWindow):
         self.selected_product = getattr(card_widget, 'product_data')
         self.selected_card.setStyleSheet(f"#ProductCard {{background-color: {COLOR_SELECTED_CARD}}}")
 
-
     def apply_filters(self):
         search_text = self.ui.searchInput.text().lower()
         combo_supplier = self.ui.suppliersCombo.currentText()
@@ -326,6 +335,8 @@ class MainWindow(QMainWindow):
         
         form_product = ProductForm(self.selected_product)
         if form_product.exec() == QDialog.Accepted:
+            self.clear_product_cards()
+            self.load_products()
             return
 
     def del_product(self):
@@ -379,6 +390,7 @@ class ProductForm(QDialog):
             self.set_product_data()
         self.set_combo_boxes()
         self.setupBtns()
+        self.ui.add_photo_btn.clicked.connect(self.add_photo)
 
     def set_product_data(self):
         self.ui.articleProduct.setText(self.product.article)
@@ -389,7 +401,6 @@ class ProductForm(QDialog):
         self.ui.countProduct.setText(str(self.product.quantity))
         self.ui.discountProduct.setText(str(self.product.discount))
         
-
     def set_combo_boxes(self):
         categories = self.session.query(Product.category).distinct().all()
         producers = self.session.query(Product.producer).distinct().all()
@@ -407,6 +418,17 @@ class ProductForm(QDialog):
     def setupBtns(self):
         self.ui.cancelBtn.clicked.connect(self.reject)
         self.ui.saveBtn.clicked.connect(self.save_product)
+
+    def add_photo(self):
+        file_path, _ = QFileDialog.getOpenFileName(
+            self,
+            "Выберите файл",
+            "./",
+            "Images (*.png *.jpg *.jpeg *.bmp)"
+        )
+        if file_path:
+            self.product.image_url = resize_image(file_path)
+
 
     def save_product(self):
         if not self.validate():
@@ -464,6 +486,8 @@ class ProductForm(QDialog):
             show_msg(self, "Ошибка", "Скидка должна быть от 0 до 100")
             return False
         return True
+    
+
 
 def main():
     init_db()
